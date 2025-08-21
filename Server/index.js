@@ -1,10 +1,14 @@
 const express = require("express");
 const cors = require("cors");
+const workoutsRouter = require("./routes/workouts");
 
 const app = express();
 
 app.use(cors()); // this is used to control what is allowed to use our backend (later on that will be our frontend that is running from vercel)
 app.use(express.json());
+
+// connecting workouts.js route
+app.use("/workouts", workoutsRouter);
 
 app.get("/", (req, res) => {
   res.send("Workout logger backend is running! test test test");
