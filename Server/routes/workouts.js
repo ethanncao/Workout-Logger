@@ -1,21 +1,28 @@
 const express = require("express");
 const router = express.Router();
 
-let WORKOUTS = [];
+let SESSIONS = [];
 
 router.get("/", (req, res) => {
-  res.json(WORKOUTS.sort((a, b) => b.date.localeCompare(a.date)));
+  // SESSIONS will be treated as a stack
+  res.json(SESSIONS);
 });
 
 router.post("/", (req, res) => {
-  const { title, date, notes } = req.body || {};
+  const { title, date, exercises } = req.body || {};
 
   if (!title || !date)
     return res.status(400).json({ error: "Title and date required!" });
 
-  const workout = { id: crypto.randomUUID(), title, date, notes: notes ?? "" };
-  WORKOUTS.push(workout);
-  res.status(201).json(workout);
+  const session = {
+    id: crypto.randomUUID(),
+    title,
+    date,
+    exercises: Array.isArray(exercises) ? exercises : [],
+  };
+  SESSIONS.push(session);
+  res.status(201).json(session);
+  console.log(SESSIONS);
 });
 
 module.exports = router;

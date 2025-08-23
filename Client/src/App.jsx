@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Workout from "./Workout.jsx";
 
 function App() {
   const [message, setMessage] = useState("");
@@ -19,7 +21,11 @@ function App() {
 
   return (
     <>
-      <h1>Welcome to the app!</h1>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Workout />}></Route>
+        </Routes>
+      </BrowserRouter>
     </>
   );
 }
