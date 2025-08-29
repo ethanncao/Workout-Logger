@@ -15,7 +15,7 @@ router.post("/", (req, res) => {
     return res.status(400).json({ error: "Title and date required!" });
 
   const session = {
-    id: crypto.randomUUID(),
+    session_id: crypto.randomUUID(),
     title,
     date,
     exercises: Array.isArray(exercises) ? exercises : [],

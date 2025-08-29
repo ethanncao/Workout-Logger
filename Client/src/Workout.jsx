@@ -17,6 +17,18 @@ function Workout() {
 
   useEffect(() => {
     fetchSessions();
+
+    async function createDemoUser() {
+      const res = await fetch("http://localhost:5000/users/demo", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      const data = await res.json();
+      console.log("Demo user:", data);
+    }
+
+    createDemoUser();
   }, []);
 
   // handles when the user wants to start a new workout and we default to Workout and today's date. Each session hollds exercises
@@ -26,7 +38,7 @@ function Workout() {
   };
 
   // handles adding an exercise to our session
-  const handleExercise = (e) => {
+  const handleExercise = async (e) => {
     e.preventDefault();
     const { name } = exForm;
 

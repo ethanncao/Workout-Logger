@@ -1,0 +1,69 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+// prisma/schema.prisma
+
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  sessions  Session[]
+  createdAt DateTime @default(now())
+}
+
+model Session {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  startedAt DateTime @default(now())
+  label     String?
+  notes     String?
+  exercises SessionExercise[]
+}
+
+model Exercise {
+  id           String   @id @default(uuid())
+  name         String
+  normalized   String   @unique  // lowercased version of name
+  createdAt    DateTime @default(now())
+  sessionLinks SessionExercise[]
+}
+
+model SessionExercise {
+  id         String   @id @default(uuid())
+  sessionId  String
+  exerciseId String
+  order      Int      @default(0)
+
+  session    Session  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  exercise   Exercise @relation(fields: [exerciseId], references: [id], onDelete: Restrict)
+  sets       Set[]
+
+  @@unique([sessionId, exerciseId, order])
+}
+
+model Set {
+  id                String   @id @default(uuid())
+  sessionExerciseId String
+  setNumber         Int      // 1,2,3,... within that session-exercise
+  reps              Int
+  weight            Float
+  rpe               Float?
+  createdAt         DateTime @default(now())
+
+  sessionExercise   SessionExercise @relation(fields: [sessionExerciseId], references: [id], onDelete: Cascade)
+  @@unique([sessionExerciseId, setNumber])
+}
