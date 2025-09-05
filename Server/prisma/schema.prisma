@@ -21,6 +21,7 @@ model User {
   id        String   @id @default(uuid())
   email     String   @unique
   sessions  Session[]
+  exercises  Exercise[]
   createdAt DateTime @default(now())
 }
 
@@ -36,10 +37,15 @@ model Session {
 
 model Exercise {
   id           String   @id @default(uuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   name         String
-  normalized   String   @unique  // lowercased version of name
+  normalized   String   // lowercased version of name
   createdAt    DateTime @default(now())
   sessionLinks SessionExercise[]
+
+  @@unique([userId, normalized])
+  @@index([userId, normalized]) 
 }
 
 model SessionExercise {
