@@ -1,28 +1,35 @@
+// routes/workouts.js
 const express = require("express");
+const { PrismaClient } = require("@prisma/client");
 const router = express.Router();
 
-let SESSIONS = [];
+const prisma = new PrismaClient();
 
-router.get("/", (req, res) => {
-  // SESSIONS will be treated as a stack
-  res.json(SESSIONS);
-});
+// Return all sessions for the demo user, newest first
+router.get("/", async (req, res) => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { email: "demo@local" },
+      select: { id: true },
+    });
 
-router.post("/", (req, res) => {
-  const { title, date, exercises } = req.body || {};
+    if (!user) return res.json([]);
 
-  if (!title || !date)
-    return res.status(400).json({ error: "Title and date required!" });
+    const sessions = await prisma.session.findMany({
+      where: { userId: user.id },
+      orderBy: { startedAt: "desc" },
+      select: {
+        id: true,
+        label: true,
+        startedAt: true,
+      },
+    });
 
-  const session = {
-    session_id: crypto.randomUUID(),
-    title,
-    date,
-    exercises: Array.isArray(exercises) ? exercises : [],
-  };
-  SESSIONS.push(session);
-  res.status(201).json(session);
-  console.log(SESSIONS);
+    res.json(sessions);
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: "Failed to fetch sessions" });
+  }
 });
 
 module.exports = router;

@@ -178,16 +178,9 @@ function Workout() {
 
       {/* This will simply show our previous session that the user finished before */}
       {prevSessions.map((s) => (
-        <li>
-          <h2>{s.title}</h2>
-          <h2>{s.date}</h2>
-          <ul style={{ marginTop: 8 }}>
-            {s.exercises.map((ex) => (
-              <li key={ex.id}>
-                {ex.name} — {ex.reps} reps — {ex.weight} lbs
-              </li>
-            ))}
-          </ul>
+        <li key={s.id}>
+          <h2>{s.label || "Workout"}</h2>
+          <h3>{new Date(s.startedAt).toISOString().slice(0, 10)}</h3>
         </li>
       ))}
       {prevSessions.length === 0 && <p>No previous sessions yet.</p>}
