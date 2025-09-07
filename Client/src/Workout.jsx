@@ -65,30 +65,88 @@ function Workout() {
     e.preventDefault();
     const { name } = exForm;
 
-    // adds an exercise to our session with an empty array of sets
-    setSession((d) => ({
-      ...d,
-      exercises: [...d.exercises, { name, sets: [] }],
+    const res = await fetch(`${BASE}/exercises`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: name }),
+    });
+
+    if (!res.ok) {
+      alert("Failed to add exercise!");
+      return;
+    }
+
+    // we get the exercise we just created
+    const exercise = await res.json();
+
+    // now we need to add it to our sessionExercise
+    const sessionRes = await fetch(`${BASE}/sessions/${session.id}/exercises`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ exerciseId: exercise.id }),
+    });
+
+    if (!sessionRes.ok) {
+      alert("Session exercise failed!");
+      return;
+    }
+
+    const sessionEx = await sessionRes.json();
+
+    // add the exercise into our current session
+    setSession((prev) => ({
+      ...prev,
+      exercises: [
+        ...prev.exercises,
+        {
+          id: sessionEx.id,
+          exerciseId: exercise.id,
+          name: exercise.name,
+          sets: [],
+        },
+      ],
     }));
 
-    // resets our add exercise form
+    // reset our exercise form
     setExForm({ name: "" });
   };
 
-  const handleSet = (e, exerciseIndex) => {
+  const handleSet = async (e, exerciseIndex) => {
     // we grab the user's input from our setForm
     e.preventDefault();
     const repsNum = Number(setForm.reps);
     const weightNum = Number(setForm.weight);
 
-    // add it to our sets inside our exercise
+    const seId = session.exercises[exerciseIndex].id;
+
+    const res = await fetch(`${BASE}/session-exercises/${seId}/sets`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ reps: repsNum, weight: weightNum }),
+    });
+
+    if (!res.ok) {
+      alert("Failed to add set!");
+      return;
+    }
+
+    const set = await res.json();
+
     setSession((prev) => {
       const exercises = [...prev.exercises];
       const ex = { ...exercises[exerciseIndex] };
 
-      ex.sets = [...ex.sets, { reps: repsNum, weight: weightNum }];
-      exercises[exerciseIndex] = ex;
+      ex.sets = [
+        ...ex.sets,
+        {
+          id: set.id,
+          setNumber: set.setNumber,
+          reps: set.reps,
+          weight: set.weight,
+        },
+      ];
 
+      exercises[exerciseIndex] = ex;
       return { ...prev, exercises };
     });
 

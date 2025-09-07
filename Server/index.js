@@ -58,10 +58,97 @@ app.post("/workouts", async (req, res) => {
   }
 });
 
+// normalize name function to help remove any redundance in exercise naming
+function normalize(name) {
+  return name.trim().toLowerCase().replace(/\s+/g, " ");
+}
+
 // when an exercise is added we post to our backend
-app.post("/workouts/exercise", async (req, res) => {
-  const { name, }
-})
+app.post("/exercises", async (req, res) => {
+  const { name } = req.body || {};
+
+  if (!name || !name.trim()) {
+    return res.status(400).json({ error: "Exercise name is required!" });
+  }
+
+  const norm = normalize(name);
+
+  // get our user
+  try {
+    const user = await prisma.user.upsert({
+      where: { email: "demo@local" },
+      update: {},
+      create: { email: "demo@local" },
+    });
+
+    const exercise = await prisma.exercise.upsert({
+      where: { userId_normalized: { userId: user.id, normalized: norm } },
+      update: { name },
+      create: { userId: user.id, name, normalized: norm },
+    });
+
+    return res.status(201).json({
+      id: exercise.id,
+      name: exercise.name,
+      normalized: exercise.normalized,
+    });
+  } catch (e) {
+    console.error(e);
+    return res.status(500).json({ error: "Failed to create exercise" });
+  }
+});
+
+app.post("/sessions/:sessionId/exercises", async (req, res) => {
+  const { exerciseId } = req.body;
+  const { sessionId } = req.params;
+
+  try {
+    const se = await prisma.sessionExercise.create({
+      data: {
+        sessionId: sessionId,
+        exerciseId: exerciseId,
+      },
+    });
+
+    return res.status(201).json({
+      id: se.id,
+      sessionId: se.sessionId,
+      exerciseId: se.exerciseId,
+    });
+  } catch (e) {
+    console.error(e);
+    return res.status(500).json({ error: "Failed to create session exercise" });
+  }
+});
+
+// when "Add Set" is pressed, find our session and add that set
+app.post("/session-exercises/:seId/sets", async (req, res) => {
+  const { seId } = req.params;
+  const { reps, weight } = req.body;
+
+  const last = await prisma.set.findFirst({
+    where: { sessionExerciseId: seId },
+    orderBy: { setNumber: "desc" },
+  });
+
+  const setNumber = (last?.setNumber ?? 0) + 1;
+
+  try {
+    const set = await prisma.set.create({
+      data: {
+        sessionExerciseId: seId,
+        reps: reps,
+        weight: weight,
+        setNumber,
+      },
+    });
+
+    return res.status(201).json(set);
+  } catch (e) {
+    console.error(e);
+    return res.status(500).json({ error: "Failed to add set to exercise" });
+  }
+});
 
 // connecting workouts.js route
 app.use("/workouts", workoutsRouter);
