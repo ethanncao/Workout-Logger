@@ -30,9 +30,11 @@ app.post("/users/demo", async (req, res) => {
   }
 });
 
+// this creates our workout in backend
 app.post("/workouts", async (req, res) => {
   const { title, date } = req.body;
 
+  // find our user
   try {
     const user = await prisma.user.upsert({
       where: { email: "demo@local" },
@@ -40,6 +42,7 @@ app.post("/workouts", async (req, res) => {
       create: { email: "demo@local" },
     });
 
+    // create a new session for that user
     const session = await prisma.session.create({
       data: {
         userId: user.id,
@@ -54,6 +57,11 @@ app.post("/workouts", async (req, res) => {
     return res.status(500).json({ error: "Failed to create session" });
   }
 });
+
+// when an exercise is added we post to our backend
+app.post("/workouts/exercise", async (req, res) => {
+  const { name, }
+})
 
 // connecting workouts.js route
 app.use("/workouts", workoutsRouter);

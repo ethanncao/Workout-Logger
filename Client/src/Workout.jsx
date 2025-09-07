@@ -32,9 +32,32 @@ function Workout() {
   }, []);
 
   // handles when the user wants to start a new workout and we default to Workout and today's date. Each session hollds exercises
-  const handleClick = () => {
+  const handleClick = async () => {
+    // recoding this to be sent to our postgre
     const today = new Date().toISOString().slice(0, 10);
-    setSession({ title: "Workout", date: today, exercises: [] });
+
+    // calling our backend with a title and today's date
+    const res = await fetch(`${BASE}/workouts`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ title: "Workout", date: today }),
+    });
+
+    if (!res.ok) {
+      alert("Failed to start workout!");
+      return;
+    }
+
+    // once created we set that as our current Session
+    const created = await res.json();
+
+    // now if we add exercises we will add it to exercises
+    setSession({
+      id: created.id,
+      title: created.label || "Workout",
+      date: new Date(created.startedAt).toISOString().slice(0, 10),
+      exercises: [],
+    });
   };
 
   // handles adding an exercise to our session
