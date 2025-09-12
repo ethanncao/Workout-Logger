@@ -150,6 +150,29 @@ app.post("/session-exercises/:seId/sets", async (req, res) => {
   }
 });
 
+app.get("/sessions/:id", async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    session = await prisma.session.findUnique({
+      where: { id: id },
+      include: {
+        exercises: {
+          include: {
+            exercise: true,
+            sets: true,
+          },
+        },
+      },
+    });
+
+    return res.status(200).json(session);
+  } catch (e) {
+    console.error(e);
+    return res.status(404).json({ error: "Failed to get the workout session" });
+  }
+});
+
 // connecting workouts.js route
 app.use("/workouts", workoutsRouter);
 

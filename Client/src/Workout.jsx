@@ -111,6 +111,19 @@ function Workout() {
     setExForm({ name: "" });
   };
 
+  const fetchSession = async function (sessionId) {
+    const res = await fetch(`${BASE}/sessions/${sessionId}`);
+
+    if (!res.ok) {
+      alert("Fetching sessions failed!");
+      return;
+    }
+
+    const session = await res.json();
+
+    console.log(session);
+  };
+
   const handleSet = async (e, exerciseIndex) => {
     // we grab the user's input from our setForm
     e.preventDefault();
@@ -163,6 +176,8 @@ function Workout() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(session),
     });
+
+    await fetchSession(session.id);
 
     // reset our current session to null
     setSession(null);
@@ -262,6 +277,7 @@ function Workout() {
         <li key={s.id}>
           <h2>{s.label || "Workout"}</h2>
           <h3>{new Date(s.startedAt).toISOString().slice(0, 10)}</h3>
+          <button onClick={() => fetchSession(s.id)}>Show Workout</button>
         </li>
       ))}
       {prevSessions.length === 0 && <p>No previous sessions yet.</p>}
