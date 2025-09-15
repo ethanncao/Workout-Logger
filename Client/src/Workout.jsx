@@ -7,6 +7,8 @@ function Workout() {
   const [prevSessions, setPrevSessions] = useState([]);
   const [exForm, setExForm] = useState({ name: "" });
   const [setForm, setSetForm] = useState({ reps: "", weight: "" });
+  const [expandedId, setExpandedId] = useState(null);
+  const [detailsById, setDetailsById] = useState({});
 
   const fetchSessions = async () => {
     const res = await fetch(`${BASE}/workouts/`);
@@ -119,9 +121,7 @@ function Workout() {
       return;
     }
 
-    const session = await res.json();
-
-    console.log(session);
+    return await res.json();
   };
 
   const handleSet = async (e, exerciseIndex) => {
@@ -177,7 +177,8 @@ function Workout() {
       body: JSON.stringify(session),
     });
 
-    await fetchSession(session.id);
+    const temp = await fetchSession(session.id);
+    console.log(temp);
 
     // reset our current session to null
     setSession(null);
@@ -188,6 +189,20 @@ function Workout() {
   const handleCancel = () => {
     alert("Cancelling the current workout session!");
     setSession(null);
+  };
+
+  const handleShowMore = async (id) => {
+    if (expandedId === id) {
+      setExpandedId(null);
+    } else {
+      if (!detailsById[id]) {
+        const detail = await fetchSession(id);
+        console.log(detail);
+
+        setDetailsById((prev) => ({ ...prev, [id]: detail }));
+      }
+      setExpandedId(id);
+    }
   };
 
   return (
@@ -277,7 +292,7 @@ function Workout() {
         <li key={s.id}>
           <h2>{s.label || "Workout"}</h2>
           <h3>{new Date(s.startedAt).toISOString().slice(0, 10)}</h3>
-          <button onClick={() => fetchSession(s.id)}>Show Workout</button>
+          <button onClick={() => handleShowMore(s.id)}>Show More</button>
         </li>
       ))}
       {prevSessions.length === 0 && <p>No previous sessions yet.</p>}
