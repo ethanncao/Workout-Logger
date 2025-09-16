@@ -171,11 +171,6 @@ function Workout() {
     if (!session) return; // just making sure we have a session
 
     // POST this info to our backend
-    await fetch(`${BASE}/workouts/`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(session),
-    });
 
     const temp = await fetchSession(session.id);
     console.log(temp);
@@ -293,6 +288,22 @@ function Workout() {
           <h2>{s.label || "Workout"}</h2>
           <h3>{new Date(s.startedAt).toISOString().slice(0, 10)}</h3>
           <button onClick={() => handleShowMore(s.id)}>Show More</button>
+          {expandedId === s.id && detailsById[s.id] && (
+            <div>
+              {detailsById[s.id].exercises.map((ex) => (
+                <div>
+                  {ex.exercise.name}
+                  <ul>
+                    {ex.sets.map((s, i) => (
+                      <li key={i}>
+                        Set {i + 1}: {s.reps} reps @ {s.weight} lbs
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          )}
         </li>
       ))}
       {prevSessions.length === 0 && <p>No previous sessions yet.</p>}
