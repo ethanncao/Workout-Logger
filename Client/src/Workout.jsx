@@ -208,6 +208,10 @@ function Workout() {
     <>
       {/* Simple headers */}
       <nav>
+        <div class="logo-container">
+          <img class="peak-logo" src="/peak-logo-noname.png" alt="" />
+          <h1>PEAK</h1>
+        </div>
         <ul class="nav-list">
           <li>
             <button
@@ -230,11 +234,11 @@ function Workout() {
 
       <div class="main">
         <h1>Welcome Back, Ethan!</h1>
-        <h2>Start a New Workout</h2>
+        <h2>Start a New Workout:</h2>
         {/* Button that starts a new workout */}
         {!session ? (
           <button class="new-workout-btn" onClick={handleClick}>
-            Start New Workout
+            New Workout
           </button>
         ) : (
           <> </>
@@ -309,7 +313,11 @@ function Workout() {
           </div>
         )}
         {/* This will simply show our previous session that the user finished before */}
-        <h2>History</h2>
+
+        <div class="history">
+          <img class="clock-logo" src="./public/clock.png" alt="" />
+          <h2>History:</h2>
+        </div>
         {prevSessions.map((s) => (
           <div class="prev-workout-card">
             <li key={s.id}>
