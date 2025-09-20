@@ -208,13 +208,24 @@ function Workout() {
     <>
       {/* Simple headers */}
       <nav>
-        <button
-          onClick={() => {
-            navigate("/data");
-          }}
-        >
-          My Data
-        </button>
+        <ul class="nav-list">
+          <li>
+            <button
+              class="nav-btn"
+              onClick={() => {
+                navigate("/data");
+              }}
+            >
+              Analytics
+            </button>
+          </li>
+          <li>
+            <button class="nav-btn">Contact</button>
+          </li>
+          <li>
+            <button class="nav-btn">Login</button>
+          </li>
+        </ul>
       </nav>
 
       <div class="main">
@@ -332,6 +343,8 @@ function Workout() {
           </div>
         ))}
         {prevSessions.length === 0 && <p>No previous sessions yet.</p>}
+        <div>Load More</div>
+        {/* Will work on getting Load More later */}
       </div>
     </>
   );

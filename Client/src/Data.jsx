@@ -10,7 +10,7 @@ function Data() {
 
   const fetchData = async () => {
     const res = await fetch(
-      `${BASE}/data/exercise/d92e5cdd-1b12-4414-a974-4b9de49904f0`
+      `${BASE}/data/exercise/d92e5cdd-1b12-4414-a974-4b9de49904f0` // right now we are just generating our bench press (later will do it dynamically)
     );
     const data = await res.json();
 
