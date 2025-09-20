@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const BASE = "http://localhost:5000";
 
 function Data() {
   const [exerData, setExerData] = useState(null);
+
+  const navigate = useNavigate();
 
   const fetchData = async () => {
     const res = await fetch(
@@ -23,6 +26,13 @@ function Data() {
 
   return (
     <>
+      <button
+        onClick={() => {
+          navigate("/");
+        }}
+      >
+        Home
+      </button>
       <pre>{JSON.stringify(exerData, null, 2)}</pre>
     </>
   );

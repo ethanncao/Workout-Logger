@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import "./styles/Workout.css";
+import { useNavigate } from "react-router-dom";
 
 const BASE = "http://localhost:5000";
 
@@ -10,6 +11,8 @@ function Workout() {
   const [setForm, setSetForm] = useState({ reps: "", weight: "" });
   const [expandedId, setExpandedId] = useState(null);
   const [detailsById, setDetailsById] = useState({});
+
+  const navigate = useNavigate();
 
   const fetchSessions = async () => {
     const res = await fetch(`${BASE}/workouts/`);
@@ -206,6 +209,13 @@ function Workout() {
       {/* Simple headers */}
       <h1>Welcome to Workout Logger!</h1>
       <h2>Start Workout</h2>
+      <button
+        onClick={() => {
+          navigate("/data");
+        }}
+      >
+        My Data
+      </button>
 
       {/* Button that starts a new workout */}
       {!session ? (
@@ -216,7 +226,7 @@ function Workout() {
 
       {/* If a session is active we display the session's title, date, and exercises */}
       {session && (
-        <div>
+        <div class="new-session">
           <h2>{session.title}</h2>
           <h2>{session.date}</h2>
           {/* diplaying our exercises */}
