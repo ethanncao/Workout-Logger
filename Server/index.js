@@ -173,6 +173,34 @@ app.get("/sessions/:id", async (req, res) => {
   }
 });
 
+// new route to get data for a workout
+app.get("/data/exercise/:exerciseId", async (req, res) => {
+  const { exerciseId } = req.params;
+
+  const ses = await prisma.sessionExercise.findMany({
+    where: { exerciseId },
+    include: {
+      sets: true,
+      session: true, // so we get the session’s date
+    },
+    orderBy: { session: { startedAt: "asc" } },
+  });
+
+  let arr = [];
+
+  ses.forEach((exercise) => {
+    let maxWeight =
+      exercise.sets.length > 0
+        ? Math.max(...exercise.sets.map((s) => s.weight))
+        : null;
+    let date = exercise.session.startedAt.toISOString().slice(0, 10);
+
+    arr.push({ date, maxWeight });
+  });
+
+  return res.json(arr);
+});
+
 // connecting workouts.js route
 app.use("/workouts", workoutsRouter);
 

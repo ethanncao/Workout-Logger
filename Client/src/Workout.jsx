@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import "./styles/Workout.css";
 
 const BASE = "http://localhost:5000";
 
@@ -203,8 +204,8 @@ function Workout() {
   return (
     <>
       {/* Simple headers */}
-      <h1>Welcome to my workout logger website!</h1>
-      <h2>Start logging new workout sessions:</h2>
+      <h1>Welcome to Workout Logger!</h1>
+      <h2>Start Workout</h2>
 
       {/* Button that starts a new workout */}
       {!session ? (
@@ -291,12 +292,12 @@ function Workout() {
           {expandedId === s.id && detailsById[s.id] && (
             <div>
               {detailsById[s.id].exercises.map((ex) => (
-                <div>
+                <div key={ex.id}>
                   {ex.exercise.name}
                   <ul>
-                    {ex.sets.map((s, i) => (
-                      <li key={i}>
-                        Set {i + 1}: {s.reps} reps @ {s.weight} lbs
+                    {ex.sets.map((set) => (
+                      <li key={set.id}>
+                        Set {set.setNumber}: {set.reps} reps @ {set.weight} lbs
                       </li>
                     ))}
                   </ul>

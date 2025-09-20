@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Workout from "./Workout.jsx";
+import Data from "./Data.jsx";
 
 function App() {
   const [message, setMessage] = useState("");
@@ -24,6 +25,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Workout />}></Route>
+          <Route path="/data" element={<Data />}></Route>
         </Routes>
       </BrowserRouter>
     </>
