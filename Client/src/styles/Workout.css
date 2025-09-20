@@ -1,9 +1,52 @@
 body {
-  background-color: rgb(255, 255, 255);
+  background-color: rgb(218, 218, 218);
   color: rgb(0, 0, 0);
   font-family: Manrope;
+  padding: 0;
+  margin: 0;
 }
 
 .new-session {
   background-color: rgb(240, 240, 240);
+}
+
+.new-workout-btn {
+  background-color: rgb(85, 144, 223);
+  color: white;
+  font-family: Manrope;
+  border-radius: 5px;
+  border: 2px solid transparent;
+  height: 2rem;
+  width: 10rem;
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+}
+
+.new-workout-btn:hover {
+  border-color: rgb(0, 0, 0);
+}
+
+nav {
+  background-color: rgb(55, 54, 61);
+  height: 7vh;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.prev-workout-card {
+  border: 2px solid rgba(0, 0, 0, 0.5);
+  border-radius: 5px;
+  width: 40rem;
+  height: 20rem;
+  margin-bottom: 5px;
+  padding: 10px;
+  background-color: white;
+}
+
+li {
+  list-style-type: none;
 }

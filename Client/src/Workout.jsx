@@ -207,117 +207,132 @@ function Workout() {
   return (
     <>
       {/* Simple headers */}
-      <h1>Welcome to Workout Logger!</h1>
-      <h2>Start Workout</h2>
-      <button
-        onClick={() => {
-          navigate("/data");
-        }}
-      >
-        My Data
-      </button>
+      <nav>
+        <button
+          onClick={() => {
+            navigate("/data");
+          }}
+        >
+          My Data
+        </button>
+      </nav>
 
-      {/* Button that starts a new workout */}
-      {!session ? (
-        <button onClick={handleClick}>Start New Workout</button>
-      ) : (
-        <> </>
-      )}
-
-      {/* If a session is active we display the session's title, date, and exercises */}
-      {session && (
-        <div class="new-session">
-          <h2>{session.title}</h2>
-          <h2>{session.date}</h2>
-          {/* diplaying our exercises */}
-          <ul style={{ marginTop: 8 }}>
-            {session.exercises.map((ex, index) => {
-              const isActive = index === session.exercises.length - 1;
-
-              return (
-                <li key={index}>
-                  {ex.name}
-                  {/* Displays each set */}
-                  <ul>
-                    {ex.sets.map((s, i) => (
-                      <li key={i}>
-                        Set {i + 1}: {s.reps} reps @ {s.weight} lbs
-                      </li>
-                    ))}
-                  </ul>
-                  {/* Later on we will be putting our sets in here with info on their reps and weight */}
-                  {/* Allows the user to only add sets to the most recent exercise */}
-                  {isActive ? (
-                    <form onSubmit={(e) => handleSet(e, index)}>
-                      <input
-                        type="number"
-                        placeholder="Reps"
-                        value={setForm.reps}
-                        onChange={(e) =>
-                          setSetForm((f) => ({ ...f, reps: e.target.value }))
-                        }
-                      />
-                      <input
-                        type="number"
-                        placeholder="Weight"
-                        value={setForm.weight}
-                        onChange={(e) =>
-                          setSetForm((f) => ({ ...f, weight: e.target.value }))
-                        }
-                      />
-                      <button type="submit">Add Set</button>
-                    </form>
-                  ) : (
-                    <></>
-                  )}
-                </li>
-              );
-            })}
-            {session.exercises.length === 0 && <i>No exercises yet.</i>}
-          </ul>
-
-          {/* Here we have a form with a submit button that adds an exercise to our session */}
-          <form onSubmit={handleExercise}>
-            <input
-              placeholder="Exercise Name"
-              value={exForm.name}
-              onChange={(e) =>
-                setExForm((f) => ({ ...f, name: e.target.value }))
-              }
-            />
-            <button type="submit">Add</button>
-          </form>
-          {/* Our finish or cancel button when the user is done with their session or wants to cancel it */}
-          <button onClick={handleFinish}>Finish</button>
-          <button onClick={handleCancel}>Cancel</button>
-        </div>
-      )}
-
-      {/* This will simply show our previous session that the user finished before */}
-      {prevSessions.map((s) => (
-        <li key={s.id}>
-          <h2>{s.label || "Workout"}</h2>
-          <h3>{new Date(s.startedAt).toISOString().slice(0, 10)}</h3>
-          <button onClick={() => handleShowMore(s.id)}>Show More</button>
-          {expandedId === s.id && detailsById[s.id] && (
-            <div>
-              {detailsById[s.id].exercises.map((ex) => (
-                <div key={ex.id}>
-                  {ex.exercise.name}
-                  <ul>
-                    {ex.sets.map((set) => (
-                      <li key={set.id}>
-                        Set {set.setNumber}: {set.reps} reps @ {set.weight} lbs
-                      </li>
-                    ))}
-                  </ul>
+      <div class="main">
+        <h1>Welcome Back, Ethan!</h1>
+        <h2>Start a New Workout</h2>
+        {/* Button that starts a new workout */}
+        {!session ? (
+          <button class="new-workout-btn" onClick={handleClick}>
+            Start New Workout
+          </button>
+        ) : (
+          <> </>
+        )}
+        {/* If a session is active we display the session's title, date, and exercises */}
+        {session && (
+          <div class="new-session">
+            <h2>{session.title}</h2>
+            <h2>{session.date}</h2>
+            {/* diplaying our exercises */}
+            <ul style={{ marginTop: 8 }}>
+              {session.exercises.map((ex, index) => {
+                const isActive = index === session.exercises.length - 1;
+                return (
+                  <li key={index}>
+                    {ex.name}
+                    {/* Displays each set */}
+                    <ul>
+                      {ex.sets.map((s, i) => (
+                        <li key={i}>
+                          Set {i + 1}: {s.reps} reps @ {s.weight} lbs
+                        </li>
+                      ))}
+                    </ul>
+                    {/* Later on we will be putting our sets in here with info on their reps and weight */}
+                    {/* Allows the user to only add sets to the most recent exercise */}
+                    {isActive ? (
+                      <form onSubmit={(e) => handleSet(e, index)}>
+                        <input
+                          type="number"
+                          placeholder="Reps"
+                          value={setForm.reps}
+                          onChange={(e) =>
+                            setSetForm((f) => ({ ...f, reps: e.target.value }))
+                          }
+                        />
+                        <input
+                          type="number"
+                          placeholder="Weight"
+                          value={setForm.weight}
+                          onChange={(e) =>
+                            setSetForm((f) => ({
+                              ...f,
+                              weight: e.target.value,
+                            }))
+                          }
+                        />
+                        <button type="submit">Add Set</button>
+                      </form>
+                    ) : (
+                      <></>
+                    )}
+                  </li>
+                );
+              })}
+              {session.exercises.length === 0 && <i>No exercises yet.</i>}
+            </ul>
+            {/* Here we have a form with a submit button that adds an exercise to our session */}
+            <form onSubmit={handleExercise}>
+              <input
+                placeholder="Exercise Name"
+                value={exForm.name}
+                onChange={(e) =>
+                  setExForm((f) => ({ ...f, name: e.target.value }))
+                }
+              />
+              <button type="submit">Add</button>
+            </form>
+            {/* Our finish or cancel button when the user is done with their session or wants to cancel it */}
+            <button onClick={handleFinish}>Finish</button>
+            <button onClick={handleCancel}>Cancel</button>
+          </div>
+        )}
+        {/* This will simply show our previous session that the user finished before */}
+        <h2>History</h2>
+        {prevSessions.map((s) => (
+          <div class="prev-workout-card">
+            <li key={s.id}>
+              <h2>{s.label || "Workout"}</h2>
+              <h3>
+                {new Date(s.startedAt).toLocaleDateString("en-US", {
+                  weekday: "long",
+                  month: "long",
+                  day: "numeric",
+                })}
+              </h3>
+              <button onClick={() => handleShowMore(s.id)}>Show More</button>
+              {expandedId === s.id && detailsById[s.id] && (
+                <div>
+                  {detailsById[s.id].exercises.map((ex) => (
+                    <div key={ex.id}>
+                      {ex.exercise.name}
+                      <ul>
+                        {ex.sets.map((set) => (
+                          <li key={set.id}>
+                            Set {set.setNumber}: {set.reps} reps @ {set.weight}{" "}
+                            lbs
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-          )}
-        </li>
-      ))}
-      {prevSessions.length === 0 && <p>No previous sessions yet.</p>}
+              )}
+            </li>
+          </div>
+        ))}
+        {prevSessions.length === 0 && <p>No previous sessions yet.</p>}
+      </div>
     </>
   );
 }
