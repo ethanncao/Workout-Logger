@@ -13,17 +13,18 @@ body {
 .new-workout-btn {
   background-color: rgb(85, 144, 223);
   color: white;
+  font-size: 1.2rem;
   font-family: Manrope;
-  border-radius: 5px;
+  border-radius: 10px;
   border: 2px solid transparent;
-  height: 2rem;
-  width: 10rem;
+  height: 4rem;
+  width: 15rem;
   cursor: pointer;
-  transition: border-color 0.3s ease;
+  transition: background-color 0.3s ease;
 }
 
 .new-workout-btn:hover {
-  border-color: rgb(0, 0, 0);
+  background-color: rgb(76, 128, 196);
 }
 
 nav {
@@ -34,6 +35,7 @@ nav {
   align-items: center;
   gap: 5px;
   padding-left: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .main {
@@ -44,13 +46,14 @@ nav {
 
 .prev-workout-card {
   border: 2px solid rgba(0, 0, 0, 0.5);
-  border-radius: 5px;
-  width: 40rem;
-  height: 20rem;
+  border-radius: 10px;
+  width: 35rem;
+  height: 15rem;
   margin-bottom: 20px;
-  padding: 10px;
+  padding: 20px;
   background-color: white;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  display: flex;
 }
 
 li {
@@ -67,6 +70,11 @@ li {
   font-size: 1.2rem;
   height: 3rem;
   width: 8rem;
+  transition: background-color 0.3s ease;
+}
+
+.nav-btn:hover {
+  background-color: rgb(170, 170, 170);
 }
 
 .nav-list {
@@ -99,4 +107,52 @@ li {
   align-items: center;
   gap: 5px;
   color: white;
+}
+
+.prev-workout-li {
+  display: flex;
+  flex-direction: column;
+  font-size: 2rem;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.session-name {
+  font-weight: bold;
+}
+.session-date {
+  font-size: 1rem;
+}
+
+.session-card {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.show-more-card {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.show-more-btn {
+  background-color: rgb(85, 144, 223);
+  color: white;
+  font-size: 1.2rem;
+  font-family: Manrope;
+  border-radius: 10px;
+  border: 2px solid transparent;
+  height: 2.5rem;
+  width: 13rem;
+  cursor: pointer;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+.show-more-btn:hover {
+  background-color: rgb(76, 128, 196);
+}
+
+.notes-txt {
+  font-size: 1rem;
 }

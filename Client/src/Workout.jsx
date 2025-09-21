@@ -234,7 +234,7 @@ function Workout() {
 
       <div class="main">
         <h1>Welcome Back, Ethan!</h1>
-        <h2>Start a New Workout:</h2>
+        <h2>Start Logging a New Workout:</h2>
         {/* Button that starts a new workout */}
         {!session ? (
           <button class="new-workout-btn" onClick={handleClick}>
@@ -320,16 +320,29 @@ function Workout() {
         </div>
         {prevSessions.map((s) => (
           <div class="prev-workout-card">
-            <li key={s.id}>
-              <h2>{s.label || "Workout"}</h2>
-              <h3>
-                {new Date(s.startedAt).toLocaleDateString("en-US", {
-                  weekday: "long",
-                  month: "long",
-                  day: "numeric",
-                })}
-              </h3>
-              <button onClick={() => handleShowMore(s.id)}>Show More</button>
+            <li class="prev-workout-li" key={s.id}>
+              <div class="session-card">
+                <div class="session-name">{s.label || "Workout"}</div>
+                <div class="session-date">
+                  {new Date(s.startedAt).toLocaleDateString("en-US", {
+                    weekday: "long",
+                    month: "long",
+                    day: "numeric",
+                  })}
+                </div>
+                <div class="notes-txt">
+                  Notes:
+                  {s.notes}
+                </div>
+              </div>
+              <div class="show-more-card">
+                <button
+                  class="show-more-btn"
+                  onClick={() => handleShowMore(s.id)}
+                >
+                  Show More
+                </button>
+              </div>
               {expandedId === s.id && detailsById[s.id] && (
                 <div>
                   {detailsById[s.id].exercises.map((ex) => (
