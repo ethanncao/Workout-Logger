@@ -4,6 +4,7 @@ body {
   font-family: Manrope;
   padding: 0;
   margin: 0;
+  align-items: center;
 }
 
 .new-session {
@@ -48,7 +49,7 @@ nav {
   border: 2px solid rgba(0, 0, 0, 0.5);
   border-radius: 10px;
   width: 35rem;
-  height: 15rem;
+  height: auto;
   margin-bottom: 20px;
   padding: 20px;
   background-color: white;
@@ -155,4 +156,157 @@ li {
 
 .notes-txt {
   font-size: 1rem;
+}
+
+.new-session {
+  background-color: rgb(255, 255, 255);
+  width: 35rem;
+  height: auto;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  border: 2px solid rgb(85, 144, 223);
+}
+
+.welcome {
+  font-size: 4rem;
+  color: rgb(0, 0, 0);
+}
+
+.finish-btn {
+  background-color: rgb(42, 179, 42);
+  font-weight: bold;
+  color: white;
+  border: transparent;
+  width: 5rem;
+  height: 1.5rem;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+}
+
+.finish-btn:hover {
+  background-color: rgb(31, 131, 31);
+}
+
+.cancel-btn {
+  background-color: red;
+  font-weight: bold;
+  color: white;
+  border: transparent;
+  width: 5rem;
+  height: 1.5rem;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+}
+
+.cancel-btn:hover {
+  background-color: rgb(173, 2, 2);
+}
+
+.add-btn {
+  background-color: rgb(175, 224, 255);
+  color: rgb(43, 134, 219);
+  font-weight: bold;
+  cursor: pointer;
+  width: 5rem;
+  border-radius: 5px;
+  height: 1.3rem;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  border: transparent;
+}
+
+.add-btn:hover {
+  color: rgb(175, 224, 255);
+  background-color: rgb(43, 134, 219);
+}
+
+input {
+  border-radius: 5px;
+  margin-right: 5px;
+  background-color: rgb(228, 228, 228);
+}
+
+.session-title {
+  font-weight: bold;
+  font-size: 2.5rem;
+  margin: 0;
+}
+
+.session-day {
+  font-size: 1.5rem;
+  margin: 0;
+}
+
+.no-exercises {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.form-btns {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.finish-cancel {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 10px;
+  width: 20rem;
+}
+
+.exercise-list {
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 0;
+}
+
+.list-container {
+  display: flex;
+  justify-content: center;
+}
+
+.add-set-btn {
+  background-color: rgb(175, 224, 255);
+  color: rgb(43, 134, 219);
+  font-weight: bold;
+  cursor: pointer;
+  width: 5rem;
+  border-radius: 5px;
+  height: 1.3rem;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  border: transparent;
+}
+
+.add-set-btn:hover {
+  color: rgb(175, 224, 255);
+  background-color: rgb(43, 134, 219);
+}
+
+ul {
+  padding: 0;
+}
+
+.logged-container {
+  width: 30rem;
+}
+
+.logged-name {
+  font-weight: bold;
+}
+
+.expand-container {
+  font-size: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  margin-top: 1rem;
+}
+
+.expand-name {
+  font-weight: bold;
 }

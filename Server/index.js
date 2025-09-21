@@ -32,7 +32,7 @@ app.post("/users/demo", async (req, res) => {
 
 // this creates our workout in backend
 app.post("/workouts", async (req, res) => {
-  const { title, date } = req.body;
+  const { title, date, notes } = req.body;
 
   // find our user
   try {
@@ -48,6 +48,7 @@ app.post("/workouts", async (req, res) => {
         userId: user.id,
         label: title,
         startedAt: new Date(date),
+        notes: notes,
       },
     });
 
