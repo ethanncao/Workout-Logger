@@ -47,13 +47,46 @@ function Data() {
       }
       const rows = await res.json();
 
+      const toLocalYMD = (value, timeZone = "America/Los_Angeles") => {
+        // Handle "date-only" strings safely (avoid UTC parsing of 'YYYY-MM-DD')
+        const d =
+          typeof value === "string" &&
+          value.length === 10 &&
+          value[4] === "-" &&
+          value[7] === "-"
+            ? new Date(
+                Number(value.slice(0, 4)),
+                Number(value.slice(5, 7)) - 1,
+                Number(value.slice(8, 10))
+              )
+            : new Date(value);
+
+        const parts = new Intl.DateTimeFormat("en-CA", {
+          timeZone,
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+        }).formatToParts(d);
+
+        const y = parts.find((p) => p.type === "year").value;
+        const m = parts.find((p) => p.type === "month").value;
+        const day = parts.find((p) => p.type === "day").value;
+        return `${y}-${m}-${day}`; // e.g., 2025-09-21 (local)
+      };
+
       const mapped = rows.map((r) => {
-        const iso =
-          typeof r.date === "string"
-            ? r.date.slice(0, 10)
-            : new Date(r.date).toISOString().slice(0, 10);
-        const [y, m, d] = iso.split("-");
-        return { date: iso, dateMDY: `${m}/${d}/${y}`, maxWeight: r.maxWeight };
+        const ymd = toLocalYMD(r.date); // local YYYY-MM-DD
+        const display = new Date(ymd).toLocaleDateString(
+          // OK: constructed as local date-only
+          "en-US",
+          {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+          }
+        );
+        const [m, d, y] = display.split("/"); // "MM/DD/YYYY"
+        return { date: ymd, dateMDY: `${m}/${d}/${y}`, maxWeight: r.maxWeight };
       });
 
       setExerData(rows); // raw
