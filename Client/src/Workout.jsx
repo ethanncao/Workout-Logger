@@ -387,7 +387,6 @@ function Workout() {
           </div>
         ))}
         {prevSessions.length === 0 && <p>No previous sessions yet.</p>}
-        <div>Load More</div>
         {/* Will work on getting Load More later */}
       </div>
     </>

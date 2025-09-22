@@ -202,6 +202,23 @@ app.get("/data/exercise/:exerciseId", async (req, res) => {
   return res.json(arr);
 });
 
+app.get("/exercises", async (req, res) => {
+  const user = await prisma.user.findUnique({
+    where: { email: "demo@local" },
+    select: { id: true },
+  });
+
+  if (!user) return res.json([]);
+
+  const exercises = await prisma.exercise.findMany({
+    where: { userId: user.id },
+    select: { id: true, name: true },
+    orderBy: { name: "asc" },
+  });
+
+  return res.json(exercises);
+});
+
 // connecting workouts.js route
 app.use("/workouts", workoutsRouter);
 

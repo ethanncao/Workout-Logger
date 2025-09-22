@@ -16,57 +16,124 @@ const BASE = "http://localhost:5000";
 
 function Data() {
   const [exerData, setExerData] = useState(null);
+  const [exercises, setExercises] = useState([]);
+  const [selectedExerciseId, setSelectedExerciseId] = useState("");
+  const [chartData, setChartData] = useState([]);
 
   const navigate = useNavigate();
 
-  const fetchData = async () => {
-    const res = await fetch(
-      `${BASE}/data/exercise/d92e5cdd-1b12-4414-a974-4b9de49904f0` // right now we are just generating our bench press (later will do it dynamically)
-    );
+  const fetchExercises = async () => {
+    const res = await fetch(`${BASE}/exercises`);
     const data = await res.json();
-
-    setExerData(data);
+    setExercises(data);
+    setSelectedExerciseId(data[0]?.id ?? "");
   };
+
   useEffect(() => {
-    fetchData();
+    fetchExercises();
   }, []);
+
+  useEffect(() => {
+    if (!selectedExerciseId) {
+      setChartData([]);
+      return;
+    }
+
+    (async () => {
+      const res = await fetch(`${BASE}/data/exercise/${selectedExerciseId}`);
+      if (!res.ok) {
+        setChartData([]);
+        return;
+      }
+      const rows = await res.json();
+
+      const mapped = rows.map((r) => {
+        const iso =
+          typeof r.date === "string"
+            ? r.date.slice(0, 10)
+            : new Date(r.date).toISOString().slice(0, 10);
+        const [y, m, d] = iso.split("-");
+        return { date: iso, dateMDY: `${m}/${d}/${y}`, maxWeight: r.maxWeight };
+      });
+
+      setExerData(rows); // raw
+      setChartData(mapped); // chart-ready
+    })();
+  }, [selectedExerciseId]);
 
   useEffect(() => {
     if (exerData) console.log(exerData);
   }, [exerData]);
 
-  const dummy = [
-    { date: "2025-09-01", maxWeight: 150 },
-    { date: "2025-09-02", maxWeight: 130 },
-    { date: "2025-09-05", maxWeight: 155 },
-    { date: "2025-09-10", maxWeight: 160 },
-  ];
-
   return (
     <>
-      <button
-        onClick={() => {
-          navigate("/");
-        }}
-      >
-        Home
-      </button>
-      <pre>{JSON.stringify(exerData, null, 2)}</pre>
+      <div className="container">
+        <nav>
+          <div class="logo-container">
+            <img class="peak-logo" src="/peak-logo-noname.png" alt="" />
+            <h1>PEAK</h1>
+          </div>
+          <ul class="nav-list">
+            <li>
+              <button
+                className="nav-btn"
+                onClick={() => {
+                  navigate("/");
+                }}
+              >
+                Home
+              </button>
+            </li>
+            <li>
+              <button class="nav-btn">Contact</button>
+            </li>
+          </ul>
+        </nav>
 
-      <div class="graph" style={{ width: "50vw" }}>
-        <ResponsiveContainer>
-          <LineChart
-            data={dummy}
-            margin={{ top: 8, right: 16, left: 0, bottom: 8 }}
-          >
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="date" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Line type="monotone" dataKey="maxWeight" />
-          </LineChart>
-        </ResponsiveContainer>
+        <div className="content-container">
+          <h1 className="data-title">Exercise Data</h1>
+          <div className="desc">
+            An interactive line chart that plots your Max Weight (lbs) per
+            session. Hover to see exact values, filter by exercise to compare
+            lifts, and spot PRs and trends at a glance!
+          </div>
+          <div className="header-container">
+            <div>Select an Exercise:</div>
+            <select
+              id="exercises"
+              value={selectedExerciseId}
+              onChange={(e) => setSelectedExerciseId(e.target.value)}
+            >
+              {exercises.map((ex) => (
+                <option key={ex.id} value={ex.id}>
+                  {ex.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="graph" style={{ width: "50vw" }}>
+            <ResponsiveContainer>
+              <LineChart
+                data={chartData}
+                margin={{ top: 8, right: 16, left: 0, bottom: 8 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="dateMDY" />
+                <YAxis
+                  label={{ value: "lbs", angle: -90, position: "insideLeft" }}
+                />
+                <Tooltip labelFormatter={(label) => label} />
+                <Legend />
+                <Line
+                  type="monotone"
+                  dataKey="maxWeight"
+                  name="Max Weight"
+                  connectNulls
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
       </div>
     </>
   );
